@@ -55,6 +55,27 @@ app.get("/health", async (req, res) => {
 
 })
 
+app.get("/logs", async (req, res) => {
+
+    try {
+
+        const logs = await HealthLog
+            .find()
+            .sort({ timestamp: -1 })
+            .limit(10)
+
+        res.json(logs)
+
+    } catch (error) {
+
+        res.json({
+            status: "ERROR"
+        })
+
+    }
+
+})
+
 const PORT = 5000
 
 app.listen(PORT, () => {

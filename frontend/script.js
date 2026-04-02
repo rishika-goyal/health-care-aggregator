@@ -6,7 +6,8 @@ async function checkHealth() {
 
         const data = await response.json()
 
-        document.getElementById("status").innerText = data.status
+        document.getElementById("status").innerText =
+    data.overallStatus
 
         document.getElementById("uptime").innerText =
             data.uptime.toFixed(2) + " seconds"
@@ -25,3 +26,43 @@ async function checkHealth() {
     }
 
 }
+
+async function loadLogs() {
+
+    try {
+
+        const response =
+            await fetch("http://localhost:5000/logs")
+
+        const logs = await response.json()
+
+        const table =
+            document.getElementById("logTable")
+
+        table.innerHTML =
+            "<tr><th>Status</th><th>Memory</th><th>Time</th></tr>"
+
+        logs.forEach(log => {
+
+            const row = table.insertRow()
+
+            row.insertCell(0).innerText =
+                log.overallStatus
+
+            row.insertCell(1).innerText =
+                log.memoryUsage
+
+            row.insertCell(2).innerText =
+                new Date(log.timestamp)
+                    .toLocaleString()
+
+        })
+
+    } catch (error) {
+
+        console.log("Failed to load logs")
+
+    }
+
+}
+loadLogs()
