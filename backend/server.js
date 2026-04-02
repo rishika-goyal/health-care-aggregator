@@ -18,8 +18,20 @@ app.get("/health", async (req, res) => {
 
     const memory = process.memoryUsage().rss / 1024 / 1024
 
+    let memoryStatus = "Healthy"
+
+    if (memory > 500) {
+        memoryStatus = "Warning"
+    }
+
+    const overallStatus =
+        memoryStatus === "Healthy"
+            ? "OK"
+            : "DEGRADED"
+
     const healthData = {
-        status: "OK",
+        overallStatus: overallStatus,
+        memoryStatus: memoryStatus,
         uptime: process.uptime(),
         memoryUsage: memory.toFixed(2) + " MB",
         timestamp: new Date()
@@ -28,6 +40,7 @@ app.get("/health", async (req, res) => {
     try {
 
         const log = new HealthLog(healthData)
+
         await log.save()
 
         res.json(healthData)
@@ -35,8 +48,7 @@ app.get("/health", async (req, res) => {
     } catch (error) {
 
         res.json({
-            status: "ERROR",
-            message: "Failed to store health log"
+            status: "ERROR"
         })
 
     }
