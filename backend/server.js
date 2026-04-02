@@ -20,21 +20,32 @@ app.get("/health", async (req, res) => {
 
     let memoryStatus = "Healthy"
 
+    let diskStatus = "Healthy"
+
+const diskUsage = Math.random() * 100
+
+if (diskUsage > 80) {
+    diskStatus = "Warning"
+}
+
     if (memory > 500) {
         memoryStatus = "Warning"
     }
 
     const overallStatus =
-        memoryStatus === "Healthy"
-            ? "OK"
-            : "DEGRADED"
+    memoryStatus === "Healthy" &&
+    diskStatus === "Healthy"
+        ? "OK"
+        : "DEGRADED"
 
     const healthData = {
         overallStatus: overallStatus,
         memoryStatus: memoryStatus,
         uptime: process.uptime(),
         memoryUsage: memory.toFixed(2) + " MB",
-        timestamp: new Date()
+        timestamp: new Date(),
+        diskStatus: diskStatus,
+        diskUsage: diskUsage.toFixed(2) + "%"
     }
 
     try {

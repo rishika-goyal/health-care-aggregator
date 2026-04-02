@@ -15,6 +15,9 @@ async function checkHealth() {
         document.getElementById("memory").innerText =
             data.memoryUsage
 
+        document.getElementById("disk").innerText =
+    data.diskUsage
+
         document.getElementById("time").innerText =
             new Date(data.timestamp).toLocaleString()
 
@@ -22,6 +25,7 @@ async function checkHealth() {
 
         document.getElementById("status").innerText =
             "Server Not Reachable"
+        
 
     }
 
